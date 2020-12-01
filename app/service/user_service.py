@@ -15,7 +15,7 @@ def login():
 
         entities = with_polymorphic(User, '*')
         user = db.session().query(entities).filter_by(email=email).first()
-        
+
         # use this for non polymorphic query
         # user = User.query.filter_by(email=email).first()
 

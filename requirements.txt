@@ -3,3 +3,4 @@ passlib
 flask-mysqldb
 Flask-WTF
 flask_sqlalchemy
+flask_cors
