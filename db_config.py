@@ -3,8 +3,9 @@ from flask_mysqldb import MySQL
 import os
 config = {}
 
-config['MYSQL_HOST'] = 'remotemysql.com'
-config['MYSQL_USER'] = 'LtwRz4Bmyp'
-config['MYSQL_PASSWORD'] = 'DhzfFPkNEt'
-config['MYSQL_DB'] = 'LtwRz4Bmyp'
+config['MYSQL_HOST'] = 'ubb-praxis-auth.cuhfzpml419o.eu-west-1.rds.amazonaws.com'
+config['MYSQL_PORT'] = '3306'
+config['MYSQL_USER'] = 'admin'
+config['MYSQL_PASSWORD'] = 'Fw5HqelvBL2xZEjX#5JE'
+config['MYSQL_DB'] = 'ubb_praxis_auth'
 config['MYSQL_CURSORCLASS'] = 'DictCursor'

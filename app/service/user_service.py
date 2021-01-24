@@ -8,34 +8,40 @@ from app.domain.user import *
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        # Get Form Fields
-        email = request.form['email']
-        password_candidate = request.form['password']
+    # Get Form Fields
+    login_data = request.get_json()
+    email = login_data['email']
+    password_candidate = login_data['password']
 
-        entities = with_polymorphic(User, '*')
-        user = db.session().query(entities).filter_by(email=email).first()
+    entities = with_polymorphic(User, '*')
+    user = db.session().query(entities).filter_by(email=email).first()
 
-        # use this for non polymorphic query
-        # user = User.query.filter_by(email=email).first()
+    # use this for non polymorphic query
+    # user = User.query.filter_by(email=email).first()
 
-        # Compare passwords
-        # if sha256_crypt.verify(password_candidate, user.password):
-        if user.password == password_candidate:
-            # Passed
-            flash('You are now logged in', 'success')
-            resp = jsonify(user.json_dict())
+    # Compare passwords
+    # if sha256_crypt.verify(password_candidate, user.password):
+    if user.password == password_candidate:
+        # Passed
+        flash('You are now logged in', 'success')
+
+        profile_url = PROFILE_SERVICE_URL + 'profile/get-by-email'
+        response = requests.post(profile_url, {'email': user.email})
+
+        if response.status_code == 200:
+            resp = jsonify(response.json())
             return resp
         else:
-            error = 'Invalid login'
-            resp = jsonify(message=error, success=False)
-            resp.status_code = 401
+            resp = jsonify(success=False, message="profile get failed")
+            resp.status_code = 500
             return resp
+
     else:
-        error = 'Username not found'
-        resp = jsonify(success=False)
+        error = 'Invalid login'
+        resp = jsonify(message=error, success=False)
         resp.status_code = 401
         return resp
+
 
 @app.route('/register', methods=['POST'])
 def register():
