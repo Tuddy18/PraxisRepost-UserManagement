@@ -11,9 +11,9 @@ from app.domain.user import *
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # Get Form Fields
-    # login_data = request.get_json()
-    email = request.form['email']
-    password_candidate = request.form['password']
+    login_data = request.get_json()
+    email = login_data['email']
+    password_candidate = login_data['password']
 
     entities = with_polymorphic(User, '*')
     user = db.session().query(entities).filter_by(email=email).first()
