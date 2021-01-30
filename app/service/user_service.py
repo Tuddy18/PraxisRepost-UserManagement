@@ -28,7 +28,7 @@ def login():
         flash('You are now logged in', 'success')
 
         profile_url = PROFILE_SERVICE_URL + 'profile/get-by-email'
-        response = requests.post(profile_url, {'email': user.email})
+        response = requests.post(profile_url, json={'email': user.email})
 
         if response.status_code == 200:
             resp = jsonify(response.json())
