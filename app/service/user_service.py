@@ -1,3 +1,6 @@
+import datetime
+
+from flask_jwt_extended import jwt_required, create_access_token
 from sqlalchemy.exc import IntegrityError
 
 from app import app, PROFILE_SERVICE_URL
@@ -7,6 +10,15 @@ from sqlalchemy.orm import with_polymorphic
 import requests
 
 from app.domain.user import *
+
+@app.route('/user/get-all', methods=['GET'])
+@jwt_required
+def get_all():
+    entities = with_polymorphic(User, '*')
+    users = db.session().query(entities).all()
+
+    resp = jsonify([user.json_dict() for user in users])
+    return resp
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -31,7 +43,8 @@ def login():
         response = requests.post(profile_url, json={'email': user.email})
 
         if response.status_code == 200:
-            resp = jsonify(response.json())
+            auth_token = create_access_token(identity=user.email, expires_delta=datetime.timedelta(hours=1))
+            resp = jsonify({'auth_token': auth_token, 'profile': response.json()})
             return resp
         else:
             resp = jsonify(success=False, message="profile get failed")

@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
 from db_config import config
 from flask_cors import CORS
 
@@ -16,4 +17,6 @@ from app.service import user_service
 from app.domain.user import *
 
 db.create_all()
+
+jwt = JWTManager(app)
 

@@ -5,3 +5,4 @@ Flask-WTF
 flask_sqlalchemy
 flask_cors
 requests
+flask-jwt-extended
