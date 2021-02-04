@@ -38,12 +38,12 @@ def login():
     if user.password == password_candidate:
         # Passed
         flash('You are now logged in', 'success')
+        auth_token = create_access_token(identity=user.email, expires_delta=datetime.timedelta(days=4))
 
         profile_url = PROFILE_SERVICE_URL + 'profile/get-by-email'
-        response = requests.post(profile_url, json={'email': user.email})
+        response = requests.post(profile_url, json={'email': user.email}, headers={'Authorization': 'Bearer ' + auth_token})
 
         if response.status_code == 200:
-            auth_token = create_access_token(identity=user.email, expires_delta=datetime.timedelta(days=4))
             resp = jsonify({'auth_token': auth_token, 'profile': response.json()})
             return resp
         else:
@@ -67,9 +67,10 @@ def register():
         db.session().add(user)
         db.session().commit()
 
+        auth_token = create_access_token(identity=user.email, expires_delta=datetime.timedelta(days=4))
         profile_json = {'email': user_json['email'], 'name': user_json['name'], 'type': user_json['type']}
         url = PROFILE_SERVICE_URL + 'profile/create'
-        response = requests.post(url, json=profile_json)
+        response = requests.post(url, json=profile_json, headers={'Authorization': 'Bearer ' + auth_token})
 
         if response.status_code == 200:
             resp = jsonify(response.json())
