@@ -43,7 +43,7 @@ def login():
         response = requests.post(profile_url, json={'email': user.email})
 
         if response.status_code == 200:
-            auth_token = create_access_token(identity=user.email, expires_delta=datetime.timedelta(hours=1))
+            auth_token = create_access_token(identity=user.email, expires_delta=datetime.timedelta(days=4))
             resp = jsonify({'auth_token': auth_token, 'profile': response.json()})
             return resp
         else:
