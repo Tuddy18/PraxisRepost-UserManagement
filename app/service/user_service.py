@@ -35,7 +35,7 @@ def login():
 
     # Compare passwords
     # if sha256_crypt.verify(password_candidate, user.password):
-    if user.password == password_candidate:
+    if user and user.password == password_candidate:
         # Passed
         flash('You are now logged in', 'success')
         auth_token = create_access_token(identity=user.email, expires_delta=datetime.timedelta(days=4))
